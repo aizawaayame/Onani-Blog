@@ -1,0 +1,64 @@
+---
+title: 几何视角下的线性代数
+publishDate: 2025-02-13
+description: '提供几何视角下的线性代数参考'
+tags:
+  - Math
+  - Linear Algebra
+---
+
+# 代数
+[Systems of Linear Equations](https://textbooks.math.gatech.edu/ila/systems-of-eqns.html#subsection-Rn)
+## 解集的几何含义
+
+**两个变量单方程**：考虑线性方程 x+y=1. 我们可以将其重写为 y=1−x,，这定义了平面中的一条直线：斜率是 −1, ， x 截距是 1.  
+**三个变量单方程**：考虑线性方程 x+y+z=1. 这是空间中平面的隐式方程。  
+**n 个变量中的单个线性方程**在 n 维空间中定义了一个 (n-1) 平面”。  
+**n个变量的方程组的解**是n维空间中“(n-1) 维平面”的交集。
+
+![image.png](https://obsidian-1305696520.cos.ap-shanghai.myqcloud.com/obsidian/pic/202502121826715.png)
+
+## 解集的参数化描述 (Parametric Description of Solution Sets)
+
+
+线性方程 x+y=1 。我们称 x+y=1 为该直线的隐式方程。我们可以将同一条直线以参数形式写成如下：
+$$
+(x,y)=(t,1−t)  \space t∈R.
+$$
+
+## 行化简 (Row Reduction)
+
+### 增广矩阵 (Augmented Matrix)
+
+增广矩阵和行操作通过消元法解方程需要反复写变量 x,y,z 和等号 = ，仅作为占位符  
+ ![image.png](https://obsidian-1305696520.cos.ap-shanghai.myqcloud.com/obsidian/pic/202502131037760.png)  
+“增广”一词指的是我们画出的竖线，以提醒我们等号的位置
+
+### 阶梯形式 (Echelon Forms)
+
+定义：一个矩阵处于**行阶梯形态**当且仅当：
+1. All zero rows are at the bottom.  
+    所有零行都在底部。
+2. The first nonzero entry of a row is to the _right_ of the first nonzero entry of the row above.  
+    一个行的第一个非零元素位于上面一行第一个非零元素的右侧。
+3. Below the first nonzero entry of a row, all entries are zero.  
+    在一行的第一个非零项下方，所有项都是零。  
+![image.png](https://obsidian-1305696520.cos.ap-shanghai.myqcloud.com/obsidian/pic/202502131039735.png)
+
+定义：**主元 (Pivot)** 是行阶梯形矩阵中一行的第一个非零元素。
+
+定义：矩阵处于**简化行阶梯形态**当且仅当它处于行阶梯形态，并且此外：
+1. Each pivot is equal to 1.  
+    每个主元等于 1。
+2. Each pivot is the only nonzero entry in its column.  
+    每个主元是其列中唯一的非零项。  
+![image.png](https://obsidian-1305696520.cos.ap-shanghai.myqcloud.com/obsidian/pic/202502131801979.png)
+
+## 参数形式 (Parametric Form)
+
+### Free Variables
+Consider a consistent system of equations in the variables $x1,x2,...,xn.$ Let $A$ be a row echelon form of the augmented matrix for this system.
+
+We say that $x_{i}$ is a _free variable_ if its corresponding column in $A$ is _not_ a [pivot column]( https://textbooks.math.gatech.edu/ila/parametric-form.html "Definition 1.2.18").
+
+# 几何
