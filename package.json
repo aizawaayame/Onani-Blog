@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "dev:check": "astro check --watch & astro dev",
-    // "build": "astro-pure check && astro check && astro build && npx playwright install",
-    "build": "next build && npx playwright install",
+    "build": "astro-pure check && astro check && astro build && next build && npx playwright install",
     "preview": "astro preview",
     "sync": "astro sync",
     "check": "astro check",
