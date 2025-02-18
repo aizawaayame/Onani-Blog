@@ -1,6 +1,6 @@
 // @ts-check
 
-import { rehypeHeadingIds } from '@astrojs/markdown-remark'
+import { rehypeHeadingIds, rehypeShiki } from '@astrojs/markdown-remark'
 import vercel from '@astrojs/vercel'
 import AstroPureIntegration from 'astro-pure'
 import { defineConfig } from 'astro/config'
@@ -92,24 +92,27 @@ export default defineConfig({
           content: { type: 'text', value: '#' }
         }
       ],
-      rehypeMermaid
+      rehypeMermaid,
+      [
+        rehypeShiki,
+        {
+          themes: {
+            light: 'github-light',
+            dark: 'github-dark'
+          },
+          transformers: [
+            transformerNotationDiff(),
+            transformerNotationHighlight(),
+            updateStyle(),
+            addTitle(),
+            addLanguage(),
+            addCopyButton(2000)
+          ]
+        }
+      ]
     ],
     syntaxHighlight: false,
     // https://docs.astro.build/en/guides/syntax-highlighting/
-    shikiConfig: {
-      themes: {
-        light: 'github-light',
-        dark: 'github-dark'
-      },
-      transformers: [
-        transformerNotationDiff(),
-        transformerNotationHighlight(),
-        updateStyle(),
-        addTitle(),
-        addLanguage(),
-        addCopyButton(2000)
-      ]
-    }
   },
   experimental: {
     svg: true,
