@@ -7,6 +7,7 @@ import { defineConfig } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
 import UnoCSS from 'unocss/astro'
+import rehypeMermaid from "rehype-mermaid";
 
 // Others
 // import { visualizer } from 'rollup-plugin-visualizer'
@@ -78,7 +79,8 @@ export default defineConfig({
   },
   // Markdown Options
   markdown: {
-    remarkPlugins: [remarkMath],
+    remarkPlugins: [
+      remarkMath],
     rehypePlugins: [
       [rehypeKatex, {}],
       rehypeHeadingIds,
@@ -89,8 +91,10 @@ export default defineConfig({
           properties: { className: ['anchor'] },
           content: { type: 'text', value: '#' }
         }
-      ]
+      ],
+      rehypeMermaid
     ],
+    syntaxHighlight: false,
     // https://docs.astro.build/en/guides/syntax-highlighting/
     shikiConfig: {
       themes: {
