@@ -14,6 +14,7 @@ import { Aside, Steps } from 'astro-pure/user'
 3. xvalue (将亡值): 表示资源可以被重用的对象，T&&
 </Steps>
 
+```md
 ```mermaid  
 graph TD
     A[expression] --> B[glvalue]
@@ -22,6 +23,7 @@ graph TD
     B --> E[xvalue]
     C --> E
     C --> F[prvalue]
+```
 ```
 <Aside type='tip' title='以下是个人的理解'>  
 左值(lvalue)就是具名的有地址的"值""，纯右值(prvalue)就是临时的无地址的"值"。但是有时候希望让纯右值具名且延长纯右值生命周期，这时候就通过`std::move`转换为将亡值(xvalue)  
