@@ -29,6 +29,7 @@
     "astro-pure": "1.2.5",
     "katex": "^0.16.21",
     "mermaid": "^10.9.0",
+    "playwright": "1.19",
     "rehype-katex": "^7.0.1",
     "rehype-mermaid": "^2.1.0",
     "remark-math": "^6.0.0",
