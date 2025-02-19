@@ -1,5 +1,4 @@
 // @ts-check
-
 import { rehypeHeadingIds, rehypeShiki } from '@astrojs/markdown-remark'
 import vercel from '@astrojs/vercel'
 import AstroPureIntegration from 'astro-pure'
@@ -7,7 +6,7 @@ import { defineConfig } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
 import UnoCSS from 'unocss/astro'
-import rehypeMermaid from "rehype-mermaid";
+import remarkMermaid from 'astro-diagram/remark-mermaid';
 
 // Others
 // import { visualizer } from 'rollup-plugin-visualizer'
@@ -80,6 +79,7 @@ export default defineConfig({
   // Markdown Options
   markdown: {
     remarkPlugins: [
+      remarkMermaid,
       remarkMath],
     rehypePlugins: [
       [rehypeKatex, {}],
@@ -92,7 +92,6 @@ export default defineConfig({
           content: { type: 'text', value: '#' }
         }
       ],
-      rehypeMermaid,
       [
         rehypeShiki,
         {
