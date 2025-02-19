@@ -5,7 +5,7 @@ import { defineConfig } from 'astro/config'
 import rehypeKatex from 'rehype-katex'
 import remarkMath from 'remark-math'
 import UnoCSS from 'unocss/astro'
-import remarkMermaid from 'astro-diagram/remark-mermaid';
+import rehypeMermaid from "rehype-mermaid";
 
 // Others
 // import { visualizer } from 'rollup-plugin-visualizer'
@@ -78,11 +78,11 @@ export default defineConfig({
   // Markdown Options
   markdown: {
     remarkPlugins: [
-      remarkMermaid,
       remarkMath],
     rehypePlugins: [
       [rehypeKatex, {}],
       rehypeHeadingIds,
+      rehypeMermaid,
       [
         rehypeAutolinkHeadings,
         {
