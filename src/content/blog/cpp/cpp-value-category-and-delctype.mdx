@@ -6,8 +6,27 @@ tags:
   - C++
 ---
 import { Aside, Steps } from 'astro-pure/user'
+import {Dot} from 'src/user'
 
 每个 C++ 表达式具有两个独立的属性：类型 (type) 和值类别 (value category)。每个表达式都有某种非引用 (non-reference) 类型，并且每个表达式必定属于三种主要值类别之一：prvalue、xvalue 和 lvalue。
+
+<Dot dot='digraph G {
+		A [label="expression"];
+		B [label="glvalue"];
+		C [label="rvalue"];
+		D [label="lvalue"];
+		E [label="xvalue"];
+		F [label="prvalue"];
+		
+		A -> B;
+		A -> C;
+		B -> D;
+		B -> E;
+		C -> E;
+		C -> F;
+ }
+'/>
+
 <Steps>
 1. lvalue (左值): 表示一个对象身份, 可以获取地址，T&
 2. prvalue (纯右值): 用于初始化对象或计算操作数的值，T

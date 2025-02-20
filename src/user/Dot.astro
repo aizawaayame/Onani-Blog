@@ -1,0 +1,8 @@
+---
+interface Props {
+    dot: string;
+}
+
+const { dot } = Astro.props;
+---
+<img src={`https://g.gravizo.com/svg?${dot}`} />
