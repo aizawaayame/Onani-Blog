@@ -6,12 +6,6 @@ tags:
   - C++
 ---
 import { Aside, Steps } from 'astro-pure/user'
-import { Graphviz } from "@beoe/astro-graphviz";
-
-
-
-
-
 
 每个 C++ 表达式具有两个独立的属性：类型 (type) 和值类别 (value category)。每个表达式都有某种非引用 (non-reference) 类型，并且每个表达式必定属于三种主要值类别之一：prvalue、xvalue 和 lvalue。
 <Steps>
@@ -20,33 +14,6 @@ import { Graphviz } from "@beoe/astro-graphviz";
 3. xvalue (将亡值): 表示资源可以被重用的对象，T&&
 </Steps>
 
-<div style={{
-  width :"50%",
-  height : "50%",
-  margin : "0 auto"
-}}>
-	<Graphviz
-	code={`digraph {
-		rankdir=TB
-		node [shape=box]
-		
-		A [label="expression"]
-		B [label="glvalue"]
-		C [label="rvalue"]
-		D [label="lvalue"]
-		E [label="xvalue"]
-		F [label="prvalue"]
-		
-		A -> B
-		A -> C
-		B -> D
-		B -> E
-		C -> E
-		C -> F
-		}
-	}`}
-	/>
-</div>
 
 <Aside type='tip' title='以下是个人的理解'>  
 左值(lvalue)就是具名的有地址的"值""，纯右值(prvalue)就是临时的无地址的"值"。但是有时候希望让纯右值具名且延长纯右值生命周期，这时候就通过`std::move`转换为将亡值(xvalue)  
