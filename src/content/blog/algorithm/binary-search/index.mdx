@@ -1,0 +1,31 @@
+---
+title: 二分搜索
+publishDate: 2022-02-13
+description: 'Binary Search'
+tags:
+  - Algorithm
+---
+.Net的实现，很有意思的思路
+```csharp
+static int BinarySearch<T>(T[] array,
+  int index,
+  int length,
+  T value,
+  TComparer<T> comparer)
+{
+    int num1 = index;
+    int num2 = index + length -1;
+    while (num1 <= num2)
+    {
+        int index1 = num1 + (num2 - num1 >> 1);
+        int num3 = comparer.Compare(array[index1], value);
+        if (num3 == 0)
+            return index1;
+        if (num3 < 0)
+            num1 = index1 + 1;
+        else
+            num2 = index1 - 1;
+    }
+    return ~num1;
+}
+```
