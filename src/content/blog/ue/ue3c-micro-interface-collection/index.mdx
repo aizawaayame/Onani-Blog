@@ -1,0 +1,25 @@
+---
+title: 'UE5 3C微观接口拾遗'
+publishDate: 2025-02-24
+description: 'UE5 3C微观接口拾遗'
+tags:
+  - UE5
+---
+
+import { Image } from 'astro:assets'
+import { Steps } from 'astro-pure/user'
+import _1Image from "./1.png"
+
+## 1. Input
+
+### 1.1. Rotation Input
+
+`APawn` 下有三个添加旋转输入的接口 `APawn::AddControllerPitchInput`，`APawn::AddControllerYawInput`，`APawn::AddControllerRollInput`。
+
+<Image src={_1Image} alt="Rotation Input调用链" />
+<Steps>
+1. `APawn::ForceRotation`：
+    根据是否配置`bUserControllerRotationPitch(Roll, Yaw)`强制更新**ControlledPawn**的旋转，
+2. `APlayerCameraManager::PrecessViewRotation`：
+    更新**Camera**的旋转
+</Steps>
