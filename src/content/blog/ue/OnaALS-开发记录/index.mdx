@@ -12,3 +12,31 @@ import {GithubCard} from 'astro-pure/advanced'
 记录一些开发过程中的问题和解决方案，以及一些有趣的代码片段。
 第一天开始就是已经完成了基本的8向移动，以及基本的动画播放。前面的不再进行记录。
 ## 第1天
+<LinkPreview href='https://www.bilibili.com/video/BV14qPje4Eak/?vd_source=045b781ce97c08d03e566beb5f968ac4' />
+实现了角色的八向移动和运动旋转;  
+
+### 八向移动
+
+八向移动依靠二维 Blendspace 进行实现，每个移动的 Blendspace 有 StrideBlend 和 WalkRunBlend 两个参数，制作有 F，B，LF，LB，RF，RB 六个 Blendspace  
+Blendspace 的混合有两个维度
+- 每个 Blendspace的 StrideBlend，WalkRunBlend 和 PlayRate
+- StrideBlend：与角色的当前速度进行匹配
+- WalkRunBlend：与当前角色的步态进行匹配
+- PlayRate：与角色速度与标准步态速度的比值进行匹配
+- 不同动画的融合参数 VelocityBlend：这直接依赖于 Character Velocity 的速度的 F，B，L，R 的分量
+
+### 转向
+
+运动旋转依靠更改角色的 `ActorRotation` 来实现，主要是进行了一些数学上的插值
+
+### bug
+
+发现角色无法旋转，排查出来是因为角色的缓存的 `ControlledRotation` 始终为 Zero。排查发现是因为在更新的时候写错了一个条件，导致在 `ROLE_Authority` 的时候没有更新
+```cpp
+if (GetLocalRole() == ROLE_SimulatedProxy) // error! should be !=
+{  
+  ReplicatedCurrentAcceleration = GetCharacterMovement()->GetCurrentAcceleration();  
+  ReplicatedControlRotation = GetControlRotation();  
+  EasedMaxAcceleration = GetCharacterMovement()->GetMaxAcceleration();  
+}
+```
