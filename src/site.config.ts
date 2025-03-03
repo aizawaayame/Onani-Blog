@@ -3,9 +3,9 @@ import type { CardListData, Config, IntegrationUserConfig, ThemeUserConfig } fro
 export const theme: ThemeUserConfig = {
   // === Basic configuration ===
   /** Title for your website. Will be used in metadata and as browser tab title. */
-  title: 'Astro Theme Pure',
+  title: 'Ciallo～(∠・ω< )',
   /** Will be used in index page & copyright declaration */
-  author: 'Pure Lab',
+  author: '种田的黄油',
   /** Description metadata for your website. Can be used in page metadata. */
   description: 'Stay hungry, stay foolish',
   /** The default favicon for your site which should be a path to an image in the `public/` directory. */
@@ -59,13 +59,13 @@ export const theme: ThemeUserConfig = {
   footer: {
     // Registration information for ICP (optional)
     registration: {
-      url: 'https://icp.gov.moe/?keyword=APTX4869',
+      url: '',
       text: 'Moe ICP APTX4869'
     },
     /** Enable displaying a “Astro & Pure theme powered” link in your site’s footer. */
     credits: true,
     /** Optional details about the social media accounts for this site. */
-    social: { github: 'https://github.com/cworld1/astro-theme-pure' }
+    social: { github: 'https://github.com/aizawaayame' }
   },
 
   content: {
