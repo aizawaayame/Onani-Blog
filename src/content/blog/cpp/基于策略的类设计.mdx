@@ -1,0 +1,229 @@
+---
+title: 基于策略的类设计
+publishDate: 2025-03-13
+description: '基于策略的类设计'
+tags:
+  - C++
+---
+import { Aside, Steps } from 'astro-pure/user'
+import {Dot} from 'src/user'
+
+## 1. 模版策略和策略类
+基于**模板**和**多重继承**的组合构成了策略的机制。
+
+使用策略的类（宿主类）是一个具有多个模板参数的模板，每个参数都是一个策略。主机类通过其策略“间接”其功能的各个部分，并充当一个将多个策略组合成一个连贯聚合的容器。
+
+实现一个**单模式模版策略模式**有以下步骤：
+<Steps>
+1. 定义策略类
+    ```cpp title:定义Policy
+    template <class T> class Policy1 { ... }
+    template <class T> class Policy2 { ... }
+    ```
+2. 定义宿主类
+    ```cpp title:定义Host
+    template <class T, template <class> class Policy>
+    class Host : public Policy<T> { ... }
+    ```
+3. 实例化宿主类
+    ```cpp title:实例化Host
+    using Host<Policy1> Policy1Host;
+    using Host<Policy2> Policy2Host;
+    ```
+</Steps>
+
+
+模版策略类可以通过多个模版参数来实现**组合策略类**：
+<Steps>
+1. 定义多个独立的策略
+    ```cpp title:定义Policy
+    template <class T> class Type1_Policy1 { ... }
+    template <class T> class Type1_Policy2 { ... }
+    template <class T> class Type2_Policy1 { ... }
+    template <class T> class Type2_Policy2 { ... }
+    ```
+2. 定义多参数宿主类
+    ```cpp title:定义Host
+    template <class T, template <class> class Policy1, template <class> class Policy2>
+    class Host : public Policy1<T>, public Policy2<T> { ... }
+    ```
+</Steps>
+### 1.1. 基础策略类实现
+
+策略就是行为，可以定义类模版执行特定的行为。
+
+假定需要创建一个指定 Create 行为的策略：
+```cpp title:定义Create行为的策略
+template <class T>
+class OpNewCreator
+{
+public:
+    static T* Create()
+    {
+        return new T;
+    }
+};
+
+template <class T>
+class MallocCreator
+{
+public:
+    static T* Create()
+    {
+        void* buf = std::malloc(sizeof(T));
+        if (!buf)
+            return nullptr;
+        return new(buf) T;
+    }
+};
+
+template <class T>
+class PrototypeCreator
+{
+public:
+    PrototypeCreator(T* pObj = nullptr)
+        : pPrototype_(pObj)
+    { }
+  
+    T* Create()
+    {
+        return pPrototype_ ? pPrototype_->Clone() : nullptr;
+    }
+
+    T* GetPrototype()
+    {
+        return pPrototype_;
+    }
+
+    void SetPrototype(T* pObj)
+    {
+        pPrototype_ = pObj;
+    }
+
+private:
+
+    T* pPrototype_;
+};
+```
+
+策略类的使用不是独立使用的，而是由其他类继承策略类，这样可以看做其他类具有了执行策略类行为的能力。这个类可以被称为宿主类
+```cpp title:"Lib Code"
+template <class CreationPolicy>
+class WidgetManager : public CreationPolicy
+{ ... }
+```
+
+当实例化 `WidgetManager` 模版时，用户传入所需的策略
+```cpp titile:"策略实例化"
+typedef WidgetManager<OpNewCreator<Widget>> MySomeManager;
+```
+
+### 1.2. 模版参数实现策略类 (Template Template Parameter)
+
+通常宿主类的策略类模版参数是已知的。需要用户显示传递策略类模版参数是不安全和不必要的。所以，可以做以下的工作
+```cpp title:"特化宿主类"
+template <template <class Created> class CreationPolicy>
+class WidgetManager : public CreationPolicy<Widget>
+{ ... }
+```
+这样，宿主类就是使用了特化的策略类，用户不再需要显式指定策略类的模版参数。
+
+库作者能够提供最常用的策略作为默认模版参数：
+```cpp title:默认策略
+template <template <class> class CreationPolicy = OpNewCreator>
+class WidgetManager ...
+```
+
+### 1.3. 模版成员函数实现策略类 (Template Member Function)
+
+策略实现类是一个简单类 (而不是多个模版类)，它有多个模版成员。
+```cpp 
+class OpNewCreator
+{
+	template <class T>
+	static T* Create()
+	{
+		return new T;
+	}
+}
+```
+这种定义和实现策略优点是旧编译器的更好支持，但是更加难以使用。
+
+### 1.4. 组合策略类
+
+可以通过多模版参数，来实现组合模式的效果。  
+考虑设计一个智能指针类，同时需要指定两个策略：线程策略和检查策略。
+```cpp title:智能指针类定义
+template
+<class T
+ template <class> class CheckingPolicy
+ template <class> class ThreadingModel> 
+class SmartPtr;
+```
+同时可以使用线程策略和检查策略：
+```cpp
+template
+<class T
+ template <class> class CheckingPolicy
+ template <class> class ThreadingModel> 
+class SmartPtr ：
+	public CheckingPolicy<T>,
+	public ThreadingModel<SmartPtr>
+{
+	T* operator->()
+	{
+		typename ThreadingModel<SmartPrt>::Lock guard(*this);
+		CheckingPolicy<T>::Check(pointee_);
+		return pointee_;
+	}
+private:
+ 	T* pointee_;
+}
+```
+
+### 1.5. 自定义策略类结构
+
+模版无法直接进行结构定制。但可以通过将获取结构的行为抽象为策略，变相实现结构定制。
+
+假定需要为 SmartPtr 支持非指针表示形式。例如，在某些平台上，一些指针可能由句柄表示。为了解决这个问题，可以通过策略间接指针访问，例如结构策略。结构策略抽象了指针存储。因此，结构应该公开称为 PointerType（被指对象的类型）和 ReferenceType（指针引用的类型）的类型，以及 GetPointer 和 SetPointer 等函数。
+
+```cpp title:抽象结构策略
+template <class T>
+class DefaultSmartPtrStorage
+{
+public:
+	using T* PointerType;
+	using T& ReferenceType;
+protected:
+	PointerType GetPointer() { return ptr_; }
+	void SetPointer(PointerType ptr) { ptr_ = ptr; }
+private:
+	PointerType ptr_;
+}
+```
+宿主类本身添加一个模版参数即可
+```cpp
+template
+<class T,
+ template <class> class CheckingPolicy,
+ template <class> class ThreadingModel,
+ template <class> class Storage = DefaultSmartPtrStorage>
+class SmartPtr;
+```
+
+### 1.6. 拷贝构造实现策略转换
+不同的策略宿主类能互相转换的需求是存在的。
+通过拷贝构造函数，策略宿主类接收其他的策略宿主类实例，以此实现策略的灵活转换。
+```cpp title:实现不同策略的转换
+template
+<class T
+ template <class> class CheckingPolicy>
+class SmartPtr : public CheckingPolicy<T>
+{
+	...
+	template<class T1, template <class> class CP1>
+	SmartPtr(const SmartPtr<T1, CP1>& other)
+		: ptr_(other.ptr_,), ChecingPolicy<T>(other)
+	{ ... }
+}
+```
